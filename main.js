@@ -17,12 +17,12 @@ app.engine('hbs', handlebars({ defaultLayout: 'default.hbs' }))
 app.set('view engine', 'hbs')
 
 // configure app
-app.get('/', 
+app.get('/',
   (req, res) => {
     res.status(200)
     res.type('text/html')
     res.render('index')
-  }  
+  }
 )
 
 // https://api.giphy.com/v1/gifs/search
@@ -33,20 +33,20 @@ app.get('/',
 // &rating=g
 // &lang=en
 
-app.get('/search', 
+app.get('/search',
   async (req, res) => {
     const search = req.query['search-term']
     console.info('searching for ---> ', search)
     // construct the url with the query parameters
     const url = withQuery(GIPHY_URL, {
-        api_key: API_KEY,
-        q: search,
-        limit: 3,
-        // rating: 'g',
-        // lang: 'en'
-        // if want the next 3, change limit and use offset
-        // offset: 10
-      }
+      api_key: API_KEY,
+      q: search,
+      limit: 3,
+      // rating: 'g',
+      // lang: 'en'
+      // if want the next 3, change limit and use offset
+      // offset: 10
+    }
     )
     // search Giphy, use await
     let result = await fetch(url)
@@ -54,17 +54,23 @@ app.get('/search',
     try {
       const giphys = await result.json()
       // console.info(giphys)
+      let allGiphys = []
+      for (var key of Object.keys(giphys['data'])) {
+        allGiphys.push(giphys['data'][key].images.fixed_height.url);
+        // console.info(searchedGiphys.length);
+        console.info(allGiphys);
+      }
       res.status(200)
-      res.type('text/html')
+      // res.type('text/html')
       res.render('giphy', {
-        giphys: giphys
+        allGiphys: allGiphys
       })
-    } catch(err) {
-      console.error('Error ', err)
+      // res.send(searchedGiphys)
+      // res.send(searchedGiphys, allGiphys)
+    } catch (err) {
+      console.error('Error ----------------->', err)
       return Promise.reject(err)
     }
-    // return gif
-
   }
 )
 

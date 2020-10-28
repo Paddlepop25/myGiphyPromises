@@ -462,10 +462,6 @@ let data = {
     }
  }
  
- for (var key in data) {
-    if (data.hasOwnProperty(key)) {
-        console.info(key + " -> " + data[key]);
-    }
+ for (var key of Object.keys(data['data'])) {
+        console.info(data['data'][key].images.fixed_height.url);
 }
-// let gifs = data['data'][0].images.fixed_height.url
-//  console.info('data ----------------------------------------------->', gifs) 
