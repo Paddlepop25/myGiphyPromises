@@ -1,0 +1,72 @@
+// load the 4 libraries
+const express = require('express')
+const handlebars = require('express-handlebars')
+const fetch = require('node-fetch')
+const withQuery = require('with-query').default
+
+// configure the PORT
+const PORT = parseInt(process.argv[2]) || parseInt(process.env.APP_PORT) || 3000;
+const API_KEY = process.env.API_KEY || ""
+const GIPHY_URL = 'https://api.giphy.com/v1/gifs/search'
+// create an instance of express
+const app = express()
+
+// configure HBS
+app.engine('hbs', handlebars({ defaultLayout: 'default.hbs' }))
+app.set('view engine', 'hbs')
+
+// configure app
+app.get('/', 
+  (req, res) => {
+    res.status(200)
+    res.type('text/html')
+    res.render('index')
+  }  
+)
+
+// https://api.giphy.com/v1/gifs/search
+// ?api_key=API_KEY
+// &q=llama
+// &limit=5
+// &offset=0
+// &rating=g
+// &lang=en
+
+app.get('/search', 
+  async (req, res) => {
+    const search = req.query['search-term']
+    console.info(search)
+    // construct the url with the query parameters
+    const url = withQuery(GIPHY_URL, {
+        api_key: API_KEY,
+        q: search,
+        limit: 3,
+        // rating: 'g',
+        // lang: 'en'
+        // if want the next 3, change limit and use offset
+        // offset: 10
+      }
+    )
+    // search Giphy, use await
+    let result = await fetch(url)
+    // console.info('result ------> ', result)
+    const giphys = await result.json()
+    console.info(giphys)
+
+    // } catch(err) {
+    //   console.error('Error ', err)
+    //   return Promise.reject(err)
+    // }
+    // return gif
+  }  
+)
+
+// start application only if API_KEY is available
+if (API_KEY) {
+  app.listen(PORT, () => {
+    console.info(`Application started on port ${PORT} at ${new Date()}`)
+  })
+}
+else {
+  console.error('API_KEY is not set')
+} 
