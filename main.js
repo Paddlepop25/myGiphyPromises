@@ -8,6 +8,7 @@ const withQuery = require('with-query').default
 const PORT = parseInt(process.argv[2]) || parseInt(process.env.APP_PORT) || 3000;
 const API_KEY = process.env.API_KEY || ""
 const GIPHY_URL = 'https://api.giphy.com/v1/gifs/search'
+
 // create an instance of express
 const app = express()
 
@@ -35,7 +36,7 @@ app.get('/',
 app.get('/search', 
   async (req, res) => {
     const search = req.query['search-term']
-    console.info(search)
+    console.info('searching for ---> ', search)
     // construct the url with the query parameters
     const url = withQuery(GIPHY_URL, {
         api_key: API_KEY,
@@ -50,15 +51,21 @@ app.get('/search',
     // search Giphy, use await
     let result = await fetch(url)
     // console.info('result ------> ', result)
-    const giphys = await result.json()
-    console.info(giphys)
-
-    // } catch(err) {
-    //   console.error('Error ', err)
-    //   return Promise.reject(err)
-    // }
+    try {
+      const giphys = await result.json()
+      // console.info(giphys)
+      res.status(200)
+      res.type('text/html')
+      res.render('giphy', {
+        giphys: giphys
+      })
+    } catch(err) {
+      console.error('Error ', err)
+      return Promise.reject(err)
+    }
     // return gif
-  }  
+
+  }
 )
 
 // start application only if API_KEY is available
