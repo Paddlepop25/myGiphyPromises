@@ -1,19 +1,5 @@
 <h3>Giphy Result</h3>
 
-<table style="outline: 2px black">
-  <tr>
-      {{#each allGiphys}}
-    <td>
-      <img src="{{ this }}" alt="gif">
-    </td>
-      {{/each}}
-  </tr>
-</table>
-
-<ul>
-  {{#each allGiphys}}
-    <li>{{this}}</li>
-  {{/each}}
-</ul>
-
-{{!-- <img src="https://media3.giphy.com/media/xTiTnrliW65rlwud8I/200.gif?cid=efa1862ec09izvljluld4lc7jg55z80p3uhnc2dvgpa184hb&rid=200.gif" alt=""> --}}
+{{#each allGiphys}}
+<img src={{ this }} alt="gif">
+{{/each}}

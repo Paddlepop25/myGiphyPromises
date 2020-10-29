@@ -43,35 +43,46 @@ app.get('/search',
       api_key: API_KEY,
       q: search,
       limit: 10,
-      // rating: 'g',
-      // lang: 'en'
-      // if want the next 10, change limit and use offset
-      // offset: 10
     }
     )
 
-    // search Giphy, use await
     let result = await fetch(url)
     // console.info('result ------> ', result)
-    try {
-      const giphys = await result.json()
-      // console.info(giphys)
-      let allGiphys = []
-      
-      for (var key of Object.keys(giphys['data'])) {
-        allGiphys.push(giphys['data'][key].images.fixed_height.url);
-      }
-      // console.info(allGiphys);
+    const giphys = await result.json()
+    // console.info(giphys)
 
-      res.status(200)
-      res.type('text/html')
-      res.render('giphy', {
-        allGiphys: allGiphys
-      })
-    } catch (err) {
-      console.error('Error ----------------->', err)
-      return Promise.reject(err)
-    }
+    // valid javascript variables: start with _ or a or A
+
+    // search Giphy, use await
+    // const imgs = []
+    // for (let d of giphys.data) {
+    //   const title = d.title // will give error if not found
+    //   // const title = d['title'] // will give null error if not found
+    //   const url = d.images.fixed_height.url
+    //   // other way of writing
+    //   // url = d['images']['fixed_height']['url'] 
+    //   imgs.push({ title, url }) // same as title: title and url: url
+    // }
+
+    // better way to 'loop'
+    const imgs = giphys.data
+      // .filter(
+      //   d => {
+      //     return !d.title.includes('f**k')
+      //   })
+      .map(
+        (d) => {
+          return { title: d.title, url: d.images.fixed_height.url }
+        })
+
+    // console.info(imgs)
+
+    res.status(200)
+    res.type('text/html')
+    res.render('giphyChuk', {
+      search, imgs,
+      hasContent: imgs.length > 0
+    })
   }
 )
 
