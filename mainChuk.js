@@ -98,3 +98,5 @@ if (API_KEY) {
 else {
   console.error('API_KEY is not set')
 } 
+
+console.info('HEROKU PUSH')

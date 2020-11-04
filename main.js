@@ -57,7 +57,7 @@ app.get('/search',
       const giphys = await result.json()
       // console.info(giphys)
       let allGiphys = []
-      
+              
       for (var key of Object.keys(giphys['data'])) {
         allGiphys.push(giphys['data'][key].images.fixed_height.url);
       }
