@@ -5,7 +5,7 @@ const fetch = require('node-fetch')
 const withQuery = require('with-query').default
 
 // configure the PORT
-const PORT = parseInt(process.argv[2]) || parseInt(process.env.APP_PORT) || 3000;
+const PORT = parseInt(process.argv[2]) || parseInt(process.env.PORT) || 3000
 const API_KEY = process.env.API_KEY || ""
 const GIPHY_URL = 'https://api.giphy.com/v1/gifs/search'
 
@@ -87,6 +87,7 @@ app.get('/search',
 )
 
 // to use styles in static folder
+// app.use(express.static(__dirname + '/static'))
 app.use(express.static(__dirname + '/static'))
 
 // start application only if API_KEY is available
